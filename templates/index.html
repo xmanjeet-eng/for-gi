@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nifty 50 AI Predictor</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0e1117; color: white; text-align: center; }
+        .container { margin-top: 50px; padding: 30px; }
+        .dashboard { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .card { background: #1a1c24; padding: 25px; border-radius: 15px; border-top: 5px solid #4CAF50; width: 250px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .price { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
+        .BULLISH { color: #00ff88; } .BEARISH { color: #ff4b4b; } .SIDEWAYS { color: #ffa500; }
+        .meta { color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nifty 50 Live AI Predictor</h1>
+        <p class="meta">Last Updated: {{ data.time }}</p>
+        
+        <div class="dashboard">
+            <div class="card">
+                <p>Current Price</p>
+                <div class="price">{{ data.current }}</div>
+            </div>
+            <div class="card" style="border-top-color: #2196F3;">
+                <p>Predicted Target</p>
+                <div class="price">{{ data.predicted }}</div>
+                <p class="{{ data.trend }}">{{ data.change }}% {{ data.trend }}</p>
+            </div>
+            <div class="card" style="border-top-color: #9c27b0;">
+                <p>Market Sentiment (RSI)</p>
+                <div class="price">{{ data.rsi }}</div>
+                <p>{{ 'Overbought' if data.rsi > 70 else 'Oversold' if data.rsi < 30 else 'Neutral' }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
