@@ -1,1 +1,8 @@
-
+flask
+gunicorn
+yfinance
+pandas
+pandas-ta
+scikit-learn
+textblob
+newsapi-python
