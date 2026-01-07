@@ -4,4 +4,5 @@ yfinance
 pandas
 pandas-ta
 scikit-learn
-numpy
+textblob
+newsapi-python
