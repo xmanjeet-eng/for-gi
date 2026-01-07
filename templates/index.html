@@ -1,46 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Algo - Nifty</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #050505; color: white; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
-        .glow-green { box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); border-left: 4px solid #00ff88; }
-        .glow-red { box-shadow: 0 0 20px rgba(255, 75, 75, 0.2); border-left: 4px solid #ff4b4b; }
+        body { background: #0b0e14; color: white; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border-radius: 24px; }
+        .bar-up { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="max-w-3xl w-full p-8 glass glow-{{ 'green' if d.predicted > d.current else 'red' }}">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-bold tracking-widest text-blue-400">NIFTY QUANTUM AI <span class="text-xs font-light text-white opacity-50 ml-2">v4.0</span></h1>
-            <span class="text-xs text-gray-400">SYNCED: {{ d.time }}</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-8 mb-8">
+<body class="p-4 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-end mb-8">
             <div>
-                <p class="text-gray-500 text-xs uppercase mb-1">Live Nifty Index</p>
-                <h2 class="text-5xl font-black">₹{{ d.current }}</h2>
+                <h1 class="text-2xl font-black tracking-tighter text-blue-500">QUANTUM<span class="text-white">ALGO</span></h1>
+                <p class="text-xs text-gray-500">Dual-Index AI Forecast</p>
             </div>
-            <div>
-                <p class="text-gray-500 text-xs uppercase mb-1">AI 24h Forecast</p>
-                <h2 class="text-5xl font-black {{ 'text-green-400' if d.predicted > d.current else 'text-red-400' }}">₹{{ d.predicted }}</h2>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-500 uppercase">Last Update</p>
+                <p class="text-sm font-mono">{{ time }} IST</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4">
-            <div class="p-4 bg-white/5 rounded-xl text-center">
-                <p class="text-[10px] text-gray-400 uppercase">India VIX (Fear)</p>
-                <p class="text-xl font-bold text-orange-400">{{ d.vix }}</p>
+        <div class="flex flex-col md:flex-row gap-6">
+            
+            {% for market in [nifty, bn] %}
+            <div class="flex-1 glass-card p-6 md:p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-xl font-bold">{{ market.symbol }}</h2>
+                    <span class="text-xs bg-white/10 px-2 py-1 rounded">RSI: {{ market.rsi }}</span>
+                </div>
+                
+                <div class="mb-8">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">Live Spot</p>
+                    <p class="text-4xl font-black">₹{{ market.current }}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-green-500/10 p-3 rounded-xl border border-green-500/20">
+                        <p class="text-[10px] text-green-500 uppercase font-bold">Buy Zone (%)</p>
+                        <p class="text-2xl font-black text-green-400">{{ market.up_chance }}%</p>
+                    </div>
+                    <div class="bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                        <p class="text-[10px] text-red-500 uppercase font-bold">Sell Zone (%)</p>
+                        <p class="text-2xl font-black text-red-400">{{ market.down_chance }}%</p>
+                    </div>
+                </div>
+
+                <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden flex">
+                    <div class="bg-green-500 h-full shadow-[0_0_10px_#22c55e]" style="width: {{ market.up_chance }}%"></div>
+                    <div class="bg-red-500 h-full shadow-[0_0_10px_#ef4444]" style="width: {{ market.down_chance }}%"></div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-white/5">
+                    <p class="text-xs text-gray-500 mb-1 uppercase">AI Target</p>
+                    <p class="text-xl font-bold {{ 'text-green-400' if market.predicted > market.current else 'text-red-400' }}">
+                        ₹{{ market.predicted }}
+                    </p>
+                </div>
             </div>
-            <div class="p-4 bg-white/5 rounded-xl text-center">
-                <p class="text-[10px] text-gray-400 uppercase">News Sentiment</p>
-                <p class="text-xl font-bold text-blue-400">{{ d.sentiment }}</p>
-            </div>
-            <div class="p-4 bg-white/5 rounded-xl text-center">
-                <p class="text-[10px] text-gray-400 uppercase">Data Fusion</p>
-                <p class="text-xl font-bold text-purple-400">Active</p>
-            </div>
+            {% endfor %}
+
         </div>
+
+        <p class="mt-10 text-[10px] text-center text-gray-600 uppercase tracking-widest leading-loose">
+            AI predictions are probabilistic. Not financial advice. Data synced via NSE standard feeds.
+        </p>
     </div>
 </body>
 </html>
